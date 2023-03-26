@@ -1,8 +1,12 @@
 Problem
+
+
 What niches, specifically in the US, are the top Instagram influencers located in?
 
 
 Data Source
+
+
 The dataset I used for this analysis was obtained from https://www.kaggle.com/prasertk/top-1000-instagram-influencers. The dataset is updated till Februrary 2022.
 
 
