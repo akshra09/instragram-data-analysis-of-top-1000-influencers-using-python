@@ -1,0 +1,100 @@
+#importing libraries
+import numpy as np 
+import pandas as pd
+from matplotlib import pyplot as plt
+
+#importing csv file and reading data 
+df_insta = pd.read_csv(r"C:\Users\akshu\Desktop\instagram_global_top_1000.csv")
+df_insta.head()
+
+#summary for the following data 
+df_insta.info
+
+#description for the data 
+df_insta.describe()
+
+#returning relative frequency of audience country elements
+#almost 28% of 1000 influencers are from USA as their audience country 
+df_insta["Audience Country"].value_counts(normalize=True).round(2)
+
+#creating pivot table to show statistics for different categories
+df_insta.pivot_table(index="Category", values="Followers", aggfunc=['mean', 'sum', 'min', 'max'])
+
+df_usa = df_insta[df_insta['Audience Country'] == 'United States']
+df_usa.head()
+
+#converting floats to ints
+
+df_usa = df_usa.astype({"Followers":"int","Authentic engagement":"int", "Engagement avg":"int"})
+df_usa.head()
+
+#pivot table to show statistics on category followers in usa
+df_usa.pivot_table(index="Category", values="Followers", aggfunc = ['mean', 'sum', 'min', 'max'])
+
+#converting floats to ints
+df_usa = df_usa.astype({"Followers":"int","Authentic engagement":"int","Engagement avg":"int"})
+df_usa.head()
+
+# pivot table to show statistics on category followers in the USA
+
+df_usa.pivot_table(index="Category", values="Followers", aggfunc=['mean', 'sum', 'min', 'max'])
+
+df_usa.pivot_table(index="Category", values="Engagement avg", aggfunc=['mean', 'sum', 'min', 'max'])
+
+#showing categories with most followers 
+topfollowers = df_usa.nlargest(10, 'Followers')
+
+topfollowers.pivot_table(index="Category", values="Followers", aggfunc = ['sum'])
+
+#creating dataframe for top 20 followers 
+top20 = df_usa.nlargest(20,'Followers')
+
+#showinf categories with most avg audience engagement 
+topengavg = df_usa.nlargest(20,'Engagement avg')
+topengavg.pivot_table(index="Category", values="Engagement avg")
+
+# showing the categories with the most authentic audience engagement
+
+topengagement = df_usa.nlargest(20,'Authentic engagement')
+
+topengagement.pivot_table(index="Category", values="Authentic engagement")
+
+# creating a new fashion category dataframe to include all of the subsets
+
+fashion = df_usa[df_usa['Category'].str.contains('Fashion', na=False)]
+fashion.head()
+
+#plotting for followers
+plt.figure(figsize=(12,8))
+fig1 = plt.bar(topfollowers.Category, topfollowers.Followers, label = 'Followers', width = 0.8, color = 'red')
+plt.xticks(fontsize = 12, rotation = 90)
+plt.ylabel("Followers", fontsize = 16)
+plt.xlabel("Category", fontsize = 16)
+plt.title("Top 10 Categories by Followers", fontsize = 20)
+plt.tight_layout()
+# remove scientific notation
+plt.ticklabel_format(axis = "y", style = 'plain')
+
+# plotting followers
+
+plt.figure(figsize=(12,8))
+fig2 = plt.bar(top20.Category, top20.Followers, label='Followers', width=0.8, color='green')
+plt.xticks(fontsize = 12, rotation = 90)
+plt.ylabel("Followers", fontsize = 16)
+plt.xlabel("Category", fontsize = 16)
+plt.title("Top 20 Categories by Followers", fontsize = 20)
+plt.tight_layout()
+# remove scientific notation
+plt.ticklabel_format(axis="y", style='plain')
+
+# plotting the number of accounts between 0 and 60 million followers
+
+plt.figure(figsize=(12,8))
+plt.hist(df_usa.Followers, color='skyblue', range=(0,60000000))
+plt.xlabel('Followers', fontsize = 16)
+plt.ylabel('Number of Instagram Accounts', fontsize = 16)
+plt.title('Histogram: Follower Counts of Top Instagram Accounts in the US', fontsize = 20)
+plt.tight_layout()
+# remove scientific notation
+plt.ticklabel_format(style='plain')
+
